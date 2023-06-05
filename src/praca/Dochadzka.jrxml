@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report14" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="0" uuid="0b524f0f-57c6-4b43-a470-636f58ecd9fa">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="96"/>
+	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
+	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#FFFFFF" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<queryString language="SQL">
+		<![CDATA[Declare @dat1 date
+Declare @dat2 date
+Declare @meno nVarchar(max)
+Declare @id_zamestnavatela int
+
+set @dat1 =CONVERT(date,'01.05.2017',104)
+set @dat2 =CONVERT(date,'02.05.2017',104)
+set @meno ='Monika Markova'
+set @id_zamestnavatela =20
+select pz.id_zamestnanca, CONCAT(ou.meno,' ',ou.priezvisko) as meno,
+FORMAT(datum_prichodu,'dd/MM/yyyy hh:mm') as prichod,
+FORMAT(datum_odchodu,'dd/MM/yyyy hh:mm') as odchod,
+DATEDIFF(minute,datum_prichodu,datum_odchodu) as rozdiel,
+concat (zach.nazov_zachranky,'-',obzach.nazov) as zachranka
+from dochadzka do
+join zamestnanec_ucet zu on (do.id_zamestnanca=zu.id_zamestnanca)
+join pracujuci_zamestnanci pz on (zu.id_zamestnanca=pz.id_zamestnanca)
+join os_udaje ou on (zu.rod_cislo=ou.rod_cislo)
+join zachranka zach on (pz.id_zachranky = zach.id_zachranky)
+join adresa adrzach on (zach.id_adresy =adrzach.id_adresy)
+join obec obzach on (adrzach.id_obce = obzach.id_obce)
+where pz.id_zachranky =@id_zamestnavatela
+and CONVERT(date,do.datum_odchodu) between
+@dat1 and @dat2
+and ou.meno+' '+ou.priezvisko like @meno]]>
+	</queryString>
+	<field name="id_zamestnanca" class="java.lang.Integer"/>
+	<field name="meno" class="java.lang.String"/>
+	<field name="prichod" class="java.lang.String"/>
+	<field name="odchod" class="java.lang.String"/>
+	<field name="rozdiel" class="java.lang.Integer"/>
+	<field name="zachranka" class="java.lang.String"/>
+	<variable name="odpracovalMin" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{rozdiel}]]></variableExpression>
+	</variable>
+	<variable name="sum" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{rozdiel}]]></variableExpression>
+	</variable>
+	<background>
+		<band height="822" splitType="Stretch">
+			<image vAlign="Bottom">
+				<reportElement positionType="Float" mode="Opaque" x="0" y="313" width="85" height="409" backcolor="#000000" uuid="7fb38c60-7732-437b-9349-1e30491bda2b"/>
+				<imageExpression><![CDATA["silhouette.jpg"]]></imageExpression>
+			</image>
+			<rectangle>
+				<reportElement positionType="Float" x="-20" y="313" width="20" height="409" backcolor="#000000" uuid="4a6fde74-e4ec-4daa-affd-777ef4c899af"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<frame>
+				<reportElement mode="Opaque" x="-20" y="722" width="105" height="100" forecolor="#666666" backcolor="#666666" uuid="4f9c988c-34ad-470e-8b78-0de9a2393cb2"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textField isBlankWhenNull="true">
+					<reportElement style="Column header" x="0" y="0" width="104" height="73" forecolor="#000000" uuid="06c1ed1a-2671-4758-9281-3d4f8a0d5f5f"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="58" isBold="true" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Report">
+					<reportElement style="Column header" x="0" y="77" width="104" height="20" forecolor="#000000" uuid="d36d5fa4-3c3f-45be-9218-123e4e2abfd2"/>
+					<box leftPadding="4" rightPadding="4"/>
+					<textElement textAlignment="Center">
+						<font size="16" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement mode="Transparent" x="42" y="73" width="20" height="1" uuid="0a25575a-fa9c-48e7-ba73-85b165cbb311"/>
+				</line>
+			</frame>
+		</band>
+	</background>
+	<title>
+		<band height="191" splitType="Stretch">
+			<staticText>
+				<reportElement style="Title" x="0" y="0" width="555" height="115" uuid="0d515724-601c-4d22-bf84-6daad43b4d0d"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="54" isBold="false" pdfFontName="Helvetica"/>
+				</textElement>
+				<text><![CDATA[Dochádzka]]></text>
+			</staticText>
+			<textField>
+				<reportElement style="Detail" x="309" y="144" width="244" height="37" uuid="de85a3a9-96c1-4c7f-8f22-0686bd44ed75"/>
+				<textElement>
+					<font size="18"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{meno}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Detail" x="256" y="144" width="53" height="37" uuid="8dd42e92-d200-4aae-b301-cd25fdfcecca"/>
+				<textElement>
+					<font size="18"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{id_zamestnanca}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Detail" x="0" y="115" width="555" height="29" uuid="eb48a53b-c908-4721-a46a-ab297f8c3755"/>
+				<textElement>
+					<font size="24"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{zachranka}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="25" splitType="Stretch">
+			<frame>
+				<reportElement mode="Opaque" x="95" y="0" width="425" height="20" backcolor="#666666" uuid="f3b1813a-9474-442a-b366-6c2a97cdccba"/>
+				<staticText>
+					<reportElement style="Column header" x="0" y="0" width="171" height="15" uuid="fc7f8b9b-8737-4c37-87ac-869543a12b91"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[prichod]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" x="184" y="0" width="165" height="15" uuid="64022a36-9db1-430f-8722-fd708c88647b"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[odchod]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" x="349" y="0" width="76" height="15" uuid="8df4ef47-d94d-4be7-91b9-3c5a544e0eaa"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[rozdiel min]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<frame>
+				<reportElement x="97" y="1" width="423" height="15" uuid="ad55cfa0-7d41-48d8-94f3-52495339456e"/>
+			</frame>
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="97" y="16" width="458" height="1" uuid="0df97b91-05dd-4e1a-b202-51a1ee2bbf29"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement style="Detail" x="97" y="0" width="152" height="15" uuid="29fb380f-21d6-42bf-8ce9-cac665ab6f6c"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{prichod}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Detail" x="279" y="0" width="114" height="15" uuid="0cc83265-1d70-4f73-b2f9-d02baeb1e26d"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{odchod}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Detail" x="444" y="0" width="76" height="15" uuid="db58a64b-da72-4d82-8d43-ee1ce7ba301b"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{rozdiel}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="100" splitType="Stretch">
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement style="Column header" x="422" y="52" width="131" height="20" forecolor="#000000" uuid="f64b330f-68bb-484e-b5ca-1fb4af0d100f"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" x="96" y="0" width="267" height="35" forecolor="#000000" uuid="4f44af33-6f63-40fd-8b1f-9fa6ae7ec34a"/>
+				<textElement>
+					<font size="16" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Zamestnanec odpracoval spolu [min] : ]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="363" y="0" width="100" height="35" uuid="866c462e-998c-4f4c-93bb-32255b119af1"/>
+				<textElement>
+					<font fontName="Arial" size="16" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sum}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

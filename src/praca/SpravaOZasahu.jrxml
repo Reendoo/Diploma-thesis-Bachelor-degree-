@@ -1,0 +1,760 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report4" language="groovy" printOrder="Horizontal" pageWidth="612" pageHeight="792" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="be16a89d-f830-44ac-80be-8e1fbc083fbb">
+	<property name="ireport.zoom" value="1.3310000000000006"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="80"/>
+	<queryString>
+		<![CDATA[select
+(zach.nazov_zachranky + ' - '+ob1.nazov) as zachranka,
+id_zasahu as zasah,
+(ou.meno +' '+ou.priezvisko) as pacient,
+ou.rod_cislo,
+ob.nazov,
+(adr.ulica+' '+adr.cislo) as adresa,
+(CONVERT(varchar(19),FORMAT(zas.datum_zavolanie,'dd/MM/yyyy HH:mm:ss'))) as datum_zavolania,
+ISNULL((dg1.id_diagnozy+' '+Cast(dg1.nazov as nvarchar(50))),'NEZADANA')as diagPacient,
+ISNULL(pac.info_o_pacientovi,'') as infoPacient,
+ISNULL(zas.info_o_zasahu,'') as infoZasah,
+ISNULL((dg2.id_diagnozy+' '+Cast(dg2.nazov as nvarchar(50))),'NEZADANA')as diagZasah,
+ISNULL(zz.nazov_zariadenia,'NEZADANA')as nemocnica,
+ISNULL(ou2.meno+' '+ou2.priezvisko,'NEZNÁMY')  as vodic,
+ISNULL(ou4.meno+' '+ou4.priezvisko,'NEZNÁMY')  as zachranar,
+ISNULL(ou3.meno+' '+ou3.priezvisko,'RZP')  as lekar,
+ISNULL(ou1.meno+' '+ou1.priezvisko,'NEZNÁMY') as operator,
+ISNULL(ou5.meno+' '+ou5.priezvisko,'NEZNÁMY')  as prijem,
+ISNULL(ou6.meno+' '+ou6.priezvisko,'NEZNÁMY')  as uzavrel,
+(CONVERT(varchar(19),FORMAT(zas.datum_zavolanie,'dd/MM/yyyy HH:mm:ss'))) as datum_zavolania,
+(CONVERT(varchar(19),FORMAT(zas.datum_vyjazdu_posadky,'dd/MM/yyyy HH:mm:ss'))) as datum_vyjazdu_posadky,
+(CONVERT(varchar(19),FORMAT(zas.datum_prijazdu_k_pacientovi,'dd/MM/yyyy HH:mm:ss'))) as datum_prijazdu_k_pacientovi,
+(CONVERT(varchar(19),FORMAT(zas.datum_vyjazdu_od_pacienta,'dd/MM/yyyy HH:mm:ss'))) as datum_vyjazdu_od_pacienta,
+(CONVERT(varchar(19),FORMAT(zas.datum_prijazdu_do_zar,'dd/MM/yyyy HH:mm:ss'))) as datum_prijazdu_do_zar,
+(CONVERT(varchar(19),FORMAT(zas.datum_zaciatku_navratu,'dd/MM/yyyy HH:mm:ss'))) as datum_zaciatku_navratu,
+(CONVERT(varchar(19),FORMAT(zas.datum_ukoncenia_zasahu,'dd/MM/yyyy HH:mm:ss'))) as datum_ukoncenia_zasahu
+from zasah zas
+join posadka pos on (zas.id_posadky_spz =pos.id_posadky_spz)
+join zachranka zach on (pos.id_zachranky=zach.id_zachranky)
+join adresa adr1 on (zach.id_adresy=adr1.id_adresy)
+join obec ob1 on (adr1.id_obce =ob1.id_obce)
+join pacient pac on(zas.id_pacienta = pac.id_pacienta)
+join os_udaje ou on(pac.rod_cislo = ou.rod_cislo)
+join adresa adr on (zas.id_adresy_zasahu=adr.id_adresy)
+join obec ob on (adr.id_obce = ob.id_obce)
+
+full outer join zamestnanec_ucet zu1 on (zas.id_operator=zu1.id_zamestnanca)
+full outer join zamestnanec_ucet zu2 on (zas.id_vodic=zu2.id_zamestnanca)
+full outer join zamestnanec_ucet zu3 on (zas.id_lekar=zu3.id_zamestnanca)
+full outer join zamestnanec_ucet zu4 on (zas.id_zachranar=zu4.id_zamestnanca)
+full outer join zamestnanec_ucet zu5 on (zas.id_prijem=zu5.id_zamestnanca)
+full outer join zamestnanec_ucet zu6 on (zas.id_uzavrel=zu6.id_zamestnanca)
+full outer join os_udaje ou1 on (zu1.rod_cislo=ou1.rod_cislo)
+full outer join os_udaje ou2 on (zu2.rod_cislo=ou2.rod_cislo)
+full outer join os_udaje ou3 on (zu3.rod_cislo=ou3.rod_cislo)
+full outer join os_udaje ou4 on (zu4.rod_cislo=ou4.rod_cislo)
+full outer join os_udaje ou5 on (zu5.rod_cislo=ou5.rod_cislo)
+full outer join os_udaje ou6 on (zu6.rod_cislo=ou6.rod_cislo)
+full outer  join diagnozy dg1 on (pac.id_diagnozy =dg1.id_diagnozy)
+full outer  join diagnozy dg2 on (zas.id_diagnozy =dg2.id_diagnozy)
+full outer join zdravotnicke_zariadenie zz on (zas.id_zariadenia = zz.id_zariadenia)
+where zas.id_zasahu=3179]]>
+	</queryString>
+	<field name="zachranka" class="java.lang.String"/>
+	<field name="zasah" class="java.lang.Integer"/>
+	<field name="pacient" class="java.lang.String"/>
+	<field name="rod_cislo" class="java.lang.String"/>
+	<field name="nazov" class="java.lang.String"/>
+	<field name="adresa" class="java.lang.String"/>
+	<field name="datum_zavolania" class="java.lang.String"/>
+	<field name="diagPacient" class="java.lang.String"/>
+	<field name="infoPacient" class="java.lang.String"/>
+	<field name="infoZasah" class="java.lang.String"/>
+	<field name="diagZasah" class="java.lang.String"/>
+	<field name="nemocnica" class="java.lang.String"/>
+	<field name="vodic" class="java.lang.String"/>
+	<field name="zachranar" class="java.lang.String"/>
+	<field name="lekar" class="java.lang.String"/>
+	<field name="operator" class="java.lang.String"/>
+	<field name="prijem" class="java.lang.String"/>
+	<field name="uzavrel" class="java.lang.String"/>
+	<field name="datum_vyjazdu_posadky" class="java.lang.String"/>
+	<field name="datum_prijazdu_k_pacientovi" class="java.lang.String"/>
+	<field name="datum_vyjazdu_od_pacienta" class="java.lang.String"/>
+	<field name="datum_prijazdu_do_zar" class="java.lang.String"/>
+	<field name="datum_zaciatku_navratu" class="java.lang.String"/>
+	<field name="datum_ukoncenia_zasahu" class="java.lang.String"/>
+	<variable name="zasah_1" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{zasah}]]></variableExpression>
+	</variable>
+	<variable name="datum_zavolania_1" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$F{datum_zavolania}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="63" splitType="Stretch">
+			<frame>
+				<reportElement x="0" y="0" width="572" height="63" backcolor="#CCCCCC" uuid="f64f35cc-59b4-4c24-b62e-757cf029bcf7"/>
+				<staticText>
+					<reportElement x="12" y="11" width="547" height="41" uuid="3a23bb43-5de1-4a2e-b06c-76f907ef0866"/>
+					<box>
+						<pen lineWidth="2.0"/>
+						<topPen lineWidth="2.0"/>
+						<leftPen lineWidth="2.0"/>
+						<bottomPen lineWidth="2.0"/>
+						<rightPen lineWidth="2.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="24" isBold="true"/>
+					</textElement>
+					<text><![CDATA[SPRÁVA O ZÁSAHU]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="512" splitType="Stretch">
+			<staticText>
+				<reportElement x="260" y="113" width="70" height="38" uuid="d1e50cb8-c891-4665-ace1-dbfc2c02ea1a"/>
+				<box>
+					<pen lineWidth="2.0"/>
+					<topPen lineWidth="2.0"/>
+					<leftPen lineWidth="2.0"/>
+					<bottomPen lineWidth="2.0"/>
+					<rightPen lineWidth="2.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="16" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Pacient :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="330" y="113" width="242" height="38" uuid="2e402d9e-7e47-4d16-974a-7a0a7ff60d72"/>
+				<box>
+					<pen lineWidth="2.0"/>
+					<topPen lineWidth="2.0"/>
+					<leftPen lineWidth="2.0"/>
+					<bottomPen lineWidth="2.0"/>
+					<rightPen lineWidth="2.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pacient}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="73" width="240" height="20" uuid="4e36d7d4-fbf7-4872-bcd0-3543b10ea46a"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Číslo zásahu :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="93" width="240" height="20" uuid="425982b5-660a-45e5-8d38-8a9bd1badbd6"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Dátum a čas volania :]]></text>
+			</staticText>
+			<textField evaluationTime="Report">
+				<reportElement x="240" y="93" width="207" height="20" uuid="b33ea179-f53d-4efc-93c1-d1045064e4c0"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{datum_zavolania}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="240" y="73" width="207" height="20" uuid="c8df69c2-581f-48c2-908c-c8526506eb3a"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{zasah_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="572" height="33" uuid="a21142fd-3dfb-4385-984c-117a182710aa"/>
+				<box>
+					<pen lineWidth="2.0"/>
+					<topPen lineWidth="2.0"/>
+					<leftPen lineWidth="2.0"/>
+					<bottomPen lineWidth="2.0"/>
+					<rightPen lineWidth="2.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="18" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{zachranka}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="447" y="73" width="125" height="20" uuid="4da2c1e4-e44b-40bc-8801-bc8f8c4e68e0"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Rodné číslo]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="447" y="93" width="125" height="20" uuid="7b2517b0-56e7-4823-a957-49bac2be98fc"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="14" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{rod_cislo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="113" width="260" height="38" uuid="6b7b92c6-de6f-443c-8522-55d6130294b8"/>
+				<box>
+					<pen lineWidth="2.0"/>
+					<topPen lineWidth="2.0"/>
+					<leftPen lineWidth="2.0"/>
+					<bottomPen lineWidth="2.0"/>
+					<rightPen lineWidth="2.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="16" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Aktéri zásahu]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="122" y="151" width="171" height="20" uuid="b12a9fad-8415-4fa2-b65a-255661900187"/>
+				<box leftPadding="0">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{vodic}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="151" width="122" height="20" uuid="0dd033a6-3138-4f68-9e06-76a329cbd139"/>
+				<box leftPadding="0">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Vodič zásahu :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="171" width="122" height="20" uuid="3cc42b0c-4514-44e9-a36b-1bfb71a5e8e1"/>
+				<box leftPadding="0">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Lekár zásahu :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="191" width="122" height="20" uuid="f7c7a91d-af3b-4f5b-ae10-a68ecbf02dd0"/>
+				<box leftPadding="0">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Záchranár zásahu :]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="122" y="171" width="171" height="21" uuid="f904221a-51b3-4126-917e-827ab5f98694"/>
+				<box leftPadding="0">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{lekar}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="122" y="192" width="171" height="19" uuid="86505b40-6086-4f9d-95f3-37f7158bd623"/>
+				<box leftPadding="0">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{zachranar}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="351" y="151" width="221" height="20" uuid="5e7fc496-e6f4-41cd-9cdf-2f3ffe14e197"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nazov}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="211" width="122" height="20" uuid="ec836730-8eb7-4f86-a723-7301286ff2ac"/>
+				<box leftPadding="0">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Hovor prijal :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="231" width="122" height="20" uuid="875fabba-b477-4cd6-97a0-17ae2dcd02d6"/>
+				<box leftPadding="0">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Prijal :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="293" y="151" width="58" height="20" uuid="becc44d4-d236-46a2-9744-a4861c25fe91"/>
+				<box leftPadding="0">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[OBEC :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="293" y="171" width="58" height="21" uuid="fb07d70c-343d-4f6d-bf20-532e0ccf8ca9"/>
+				<box leftPadding="0">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Adresa :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="351" y="171" width="221" height="21" uuid="93158049-c7d5-410e-93bf-7841b82df457"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{adresa}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="122" y="211" width="171" height="20" uuid="9e530741-c785-4cf0-a0f4-ee66c49926fb"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{operator}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="122" y="231" width="171" height="20" uuid="5f33cf62-09db-411c-ae5d-5d4a7700f044"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{prijem}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="33" width="572" height="33" uuid="9ec6a76f-42c2-468c-9b9d-e37835a5e3c2"/>
+				<box>
+					<pen lineWidth="2.0"/>
+					<topPen lineWidth="2.0"/>
+					<leftPen lineWidth="2.0"/>
+					<bottomPen lineWidth="2.0"/>
+					<rightPen lineWidth="2.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="18" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nemocnica}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="251" width="122" height="20" uuid="29f332a9-bd84-4870-a513-255732a3f342"/>
+				<box leftPadding="0">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Uzavrel:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="122" y="251" width="171" height="20" uuid="727f9204-5d65-4a1a-8308-c1a71c76ca01"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{uzavrel}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="156" y="271" width="416" height="34" uuid="29729fa7-ae34-424a-af5a-c10a1b3984e8"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{diagPacient}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="271" width="156" height="34" uuid="a754cce4-7ae6-4954-98f2-c03f1b17ed21"/>
+				<box leftPadding="0">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Potenciálna Diagnóza :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="293" y="192" width="37" height="79" uuid="722e7cff-4b41-4450-9b0a-9ab168845992"/>
+				<box leftPadding="0">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Info :]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="330" y="192" width="242" height="79" uuid="b22a16a1-683d-45df-891d-96ee46136e7a"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{infoPacient}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="305" width="156" height="34" uuid="fa79b209-fe43-428a-840a-1a64b993c239"/>
+				<box leftPadding="0">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Konečná Diagnóza :]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="156" y="305" width="416" height="34" uuid="bff027d5-18b8-434e-ab81-7e01156290d2"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{diagZasah}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="339" width="572" height="22" uuid="843d62ef-17d2-4bfc-91c6-f2dbc977e914"/>
+				<box leftPadding="0">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Popis zásahu :]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="361" width="572" height="151" uuid="64ce6e81-8bcd-4534-9d28-fb62fd95364c"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{infoZasah}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="177">
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="20" width="93" height="20" uuid="0cb2f237-5f76-4fda-83c2-33e6e0109441"/>
+				<box>
+					<pen lineWidth="2.0"/>
+					<topPen lineWidth="2.0"/>
+					<leftPen lineWidth="2.0"/>
+					<bottomPen lineWidth="2.0"/>
+					<rightPen lineWidth="2.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{datum_vyjazdu_posadky}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="93" y="20" width="95" height="20" uuid="06c75a1a-907d-449b-a902-ef2e290896a4"/>
+				<box>
+					<pen lineWidth="2.0"/>
+					<topPen lineWidth="2.0"/>
+					<leftPen lineWidth="2.0"/>
+					<bottomPen lineWidth="2.0"/>
+					<rightPen lineWidth="2.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{datum_prijazdu_k_pacientovi}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="188" y="20" width="95" height="20" uuid="14d4fef4-d7f6-4852-96d4-6441cc5c6a92"/>
+				<box>
+					<pen lineWidth="2.0"/>
+					<topPen lineWidth="2.0"/>
+					<leftPen lineWidth="2.0"/>
+					<bottomPen lineWidth="2.0"/>
+					<rightPen lineWidth="2.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{datum_vyjazdu_od_pacienta}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="283" y="20" width="95" height="20" uuid="d8626a62-a1d5-4cdb-941c-dd38ce82e94b"/>
+				<box>
+					<pen lineWidth="2.0"/>
+					<topPen lineWidth="2.0"/>
+					<leftPen lineWidth="2.0"/>
+					<bottomPen lineWidth="2.0"/>
+					<rightPen lineWidth="2.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{datum_prijazdu_do_zar}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="378" y="20" width="95" height="20" uuid="e51f0d90-4041-4665-a33a-a67e7568ec80"/>
+				<box>
+					<pen lineWidth="2.0"/>
+					<topPen lineWidth="2.0"/>
+					<leftPen lineWidth="2.0"/>
+					<bottomPen lineWidth="2.0"/>
+					<rightPen lineWidth="2.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{datum_zaciatku_navratu}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="473" y="20" width="99" height="20" uuid="287685f2-c087-4b36-8630-ec9af918e4fb"/>
+				<box>
+					<pen lineWidth="2.0"/>
+					<topPen lineWidth="2.0"/>
+					<leftPen lineWidth="2.0"/>
+					<bottomPen lineWidth="2.0"/>
+					<rightPen lineWidth="2.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{datum_ukoncenia_zasahu}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="93" height="20" uuid="93620748-315e-4ab8-a9a7-aecb99c40f5f"/>
+				<box>
+					<pen lineWidth="2.0"/>
+					<topPen lineWidth="2.0"/>
+					<leftPen lineWidth="2.0"/>
+					<bottomPen lineWidth="2.0"/>
+					<rightPen lineWidth="2.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Výjazd]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="93" y="0" width="95" height="20" uuid="da837273-ba06-46f0-af46-50a291118c72"/>
+				<box>
+					<pen lineWidth="2.0"/>
+					<topPen lineWidth="2.0"/>
+					<leftPen lineWidth="2.0"/>
+					<bottomPen lineWidth="2.0"/>
+					<rightPen lineWidth="2.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Príjazd k pacientovi]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="188" y="0" width="95" height="20" uuid="f16b6f9d-c061-47fd-b42e-2973fc499256"/>
+				<box>
+					<pen lineWidth="2.0"/>
+					<topPen lineWidth="2.0"/>
+					<leftPen lineWidth="2.0"/>
+					<bottomPen lineWidth="2.0"/>
+					<rightPen lineWidth="2.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Výjazd od pacienta]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="283" y="0" width="95" height="20" uuid="b4ed8c24-68a1-4ee3-94ec-d8e004cf2067"/>
+				<box>
+					<pen lineWidth="2.0"/>
+					<topPen lineWidth="2.0"/>
+					<leftPen lineWidth="2.0"/>
+					<bottomPen lineWidth="2.0"/>
+					<rightPen lineWidth="2.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Príjazd nemocnica]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="378" y="0" width="95" height="20" uuid="aabe94f4-2105-4935-9530-dfd92cf7ab81"/>
+				<box>
+					<pen lineWidth="2.0"/>
+					<topPen lineWidth="2.0"/>
+					<leftPen lineWidth="2.0"/>
+					<bottomPen lineWidth="2.0"/>
+					<rightPen lineWidth="2.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Začiatok návratu]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="473" y="0" width="99" height="20" uuid="bf74dd3a-eb7b-4625-8c92-0916990a0a96"/>
+				<box>
+					<pen lineWidth="2.0"/>
+					<topPen lineWidth="2.0"/>
+					<leftPen lineWidth="2.0"/>
+					<bottomPen lineWidth="2.0"/>
+					<rightPen lineWidth="2.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Príjazd na stanicu]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+</jasperReport>
