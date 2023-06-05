@@ -9,3 +9,7 @@ Kľúčové slová: podpora rozhodovania, informačný systém, Záchranná zdra
 Used tools and technologies:
 
 Použité nástroje a technológie:
+- Java, Netbeans IDE, JasperReports
+- Google maps API
+- MS SQL Server 2012 Enterprise Edition, Toad data Modeler, Oracle SQL Developer
+- Google Maps API (Geocoding API a Distance Matrix)
